@@ -1,0 +1,5 @@
+
+    [toscawidgets.widgets]
+    widgets = tw.jquery
+    samples = tw.jquery.samples
+    

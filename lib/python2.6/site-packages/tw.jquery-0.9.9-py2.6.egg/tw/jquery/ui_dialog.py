@@ -1,0 +1,90 @@
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+from tw.api import Widget, CSSLink, js_function
+from tw.jquery.direction import *
+from ui_core import jquery_ui_core_js
+from ui import ui_dialog_js , ui_draggable_js, ui_resizable_js
+
+__all__ = ["jquery_ui_dialog_js"]
+
+jquery_ui_dialog_css    = CSSLink(modname=__name__, filename='static/css/ui.all.css')
+
+jQuery = js_function('jQuery')
+
+class JQueryUIDialog(Widget):
+
+    template = """<div xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/" py:strip="True"/>"""
+    
+    engine_name = "genshi"
+    
+    javascript = [ui_dialog_js,ui_draggable_js,jquery_ui_core_js,jquery_direction_js,ui_resizable_js]
+    css=[jquery_ui_dialog_css]
+
+    params = ["autoOpen","bgiframe","buttons","closeOnEscape","dialogClass",
+    "draggable","height","hide","maxHeight","maxWidth","minHeight","minWidth",
+    "modal","position","resizable","show","stack","title","width","zindex" ]
+
+    autoOpen = True
+    bgiframe = False
+    buttons = {}
+    closeOnEscape = True 
+    dialogClass = ""
+    draggable = True
+    height = "auto"
+    hide = None
+    maxHeight = False
+    maxWidth = False
+    minHeight = 15
+    minWidth = 15
+    modal = False
+    position = "center"
+    resizable = False
+    show = None
+    stack = True
+    title = ''
+    width = "auto"
+    zindex = 1000
+    def update_params(self, d):
+        super(JQueryUIDialog, self).update_params(d)
+        if not getattr(d,"id",None):
+            raise ValueError, "JQueryUIDialog is supposed to have id"
+        dialog_params = dict(
+            autoOpen = d.autoOpen,
+            bgiframe = d.bgiframe,
+            buttons = d.buttons,
+            closeOnEscape = d.closeOnEscape,
+            dialogClass = d.dialogClass,
+            draggable = d.draggable,
+            height = d.height,
+            hide = d.hide,
+            maxHeight = d.maxHeight,
+            maxWidth = d.maxWidth,
+            minHeight = d.minHeight,
+            minWidth = d.minWidth,
+            modal = d.modal,
+            position = d.position,
+            resizable = d.resizable,
+            show = d.show,
+            stack = d.stack,
+            title = d.title,
+            width = d.width,
+            zindex = d.zindex,
+            )
+        self.add_call(jQuery("#%s" % d.id).dialog(dialog_params))
